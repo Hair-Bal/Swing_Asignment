@@ -19,6 +19,8 @@ public class View implements ActionListener, PropertyChangeListener
 	private JLabel inputLabel = new JLabel("Enter number between 1000 and 1000000");
 	private JButton go = new JButton("Go");
 	private JLabel finished = new JLabel("Process Status:");
+	private JLabel quickSortStatus = new JLabel("QuickSort Status:");
+	private JLabel insertionSortStatus = new JLabel("InsertionSort Status:");
 
 	private JTextField input = new JTextField();
 
@@ -40,6 +42,11 @@ public class View implements ActionListener, PropertyChangeListener
 	private Integer[] data;
 	private Integer[] insertionData;
 	private Integer[] quickData;
+	/**
+	* initiating labels to display status of both sorts
+	* @author Martin
+	* @version 4.1
+	*/
 
 	private JLabel insertionLabel = new JLabel("Insertion Sort:");
 	private JLabel quickLabel = new JLabel("Quick Sort:");
@@ -65,6 +72,8 @@ public class View implements ActionListener, PropertyChangeListener
 		pane.add(insertionPanel);
 		pane.add(quickPanel);
 		pane.add(finished);
+		pane.add(quickSortStatus);
+		pane.add(insertionSortStatus);
 
 		go.addActionListener(this);
 
@@ -163,10 +172,12 @@ public class View implements ActionListener, PropertyChangeListener
 				{
 				    insertionBar.setValue(progress);
 				    finished.setText("Process Status: complete");
+					insertionSortStatus.setText("IntertionSort Status: complete");
 			    }
 			    else 
 			    {
 				    finished.setText("Process Status: running");
+					insertionSortStatus.setText("IntertionSort Status: running");
 				    insertionBar.setValue(progress);
 			    }
             }
@@ -180,11 +191,15 @@ public class View implements ActionListener, PropertyChangeListener
 				{
 					quickBar.setValue(progress);
 					finished.setText("Process Status: complete");
+					quickSortStatus.setText("QuickSort Status: complete");
+				
 				}
 				else 
 				{
 					finished.setText("Process Status: running");
+					quickSortStatus.setText("QuickSort Status: running");
 					quickBar.setValue(progress);
+
 				}
 			}
 		}
