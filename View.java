@@ -18,6 +18,9 @@ public class View implements ActionListener, PropertyChangeListener
 
 	private JLabel inputLabel = new JLabel("Enter number between 1000 and 1000000");
 	private JButton go = new JButton("Go");
+	private JButton clickMe = new JButton("Click Me!");
+	private int clickCount = 0;
+	private JLabel clickCountLabel = new JLabel("clicks");
 	private JLabel finished = new JLabel("Process Status:");
 	private JLabel quickSortStatus = new JLabel("QuickSort Status:");
 	private JLabel insertionSortStatus = new JLabel("InsertionSort Status:");
@@ -27,30 +30,30 @@ public class View implements ActionListener, PropertyChangeListener
 	private JPanel inputPanel = new JPanel(new FlowLayout());
 
 	private JPanel insertionPanel = new JPanel(new FlowLayout());
-	
+
 	private JProgressBar insertionBar = new JProgressBar();
 
 	private JPanel quickPanel = new JPanel(new FlowLayout());
-	
+
 	private JProgressBar quickBar = new JProgressBar();
-	
+
 	private int userInput;
-	
+
 	private InsertionSortDemo insertionSort;
 	private QuickSortDemo quickSort;
-	
+
 	private Integer[] data;
 	private Integer[] insertionData;
 	private Integer[] quickData;
 	/**
-	* initiating labels to display status of both sorts
-	* @author Martin
-	* @version 4.1
-	*/
+	 * initiating labels to display status of both sorts
+	 * @author Martin
+	 * @version 4.1
+	 */
 
 	private JLabel insertionLabel = new JLabel("Insertion Sort:");
 	private JLabel quickLabel = new JLabel("Quick Sort:");
-	
+
 	/**
 	 * Constructor
 	 */
@@ -60,9 +63,11 @@ public class View implements ActionListener, PropertyChangeListener
 		frame.setLocationRelativeTo(null);
 
 		input.setPreferredSize(new Dimension(150, 25));
-        inputPanel.add(inputLabel);
+		inputPanel.add(inputLabel);
 		inputPanel.add(input);
 		inputPanel.add(go);
+		inputPanel.add(clickMe);
+		inputPanel.add(clickCountLabel);
 		insertionPanel.add(insertionLabel);
 		insertionPanel.add(insertionBar);
 		quickPanel.add(quickLabel);
@@ -76,69 +81,75 @@ public class View implements ActionListener, PropertyChangeListener
 		pane.add(insertionSortStatus);
 
 		go.addActionListener(this);
+		clickMe.addActionListener(this);
 
 		frame.add(pane);
 		frame.pack();
 		frame.setVisible(true);
 		frame.setResizable(false);
 	}
-	
+
 	/**
-	 * actionPerformed method is called when an object to which it is attached 
+	 * actionPerformed method is called when an object to which it is attached
 	 * receives an action event
 	 * @param ActionEvent arg0 the event to be handled
 	 */
-	
+
 	@Override
-	public void actionPerformed(ActionEvent arg0) 
+	public void actionPerformed(ActionEvent arg0)
 	{
+		if(arg0.getSource() == clickMe)
+		{
+			clickCount++;
+			clickCountLabel.setText("" + clickCount);
+		}
 		if(arg0.getSource() == go)
 		{
-			
+
 			try{
-			if(Integer.parseInt(input.getText()) > 1000000 || Integer.parseInt(input.getText()) < 1000)
-				JOptionPane.showMessageDialog(null, "Enter an integer between 1000 and 1000000");
-			else
-			{
-				userInput = Integer.parseInt(input.getText());
-				createArray();
-				runThreads();
-			}
+				if(Integer.parseInt(input.getText()) > 1000000 || Integer.parseInt(input.getText()) < 1000)
+					JOptionPane.showMessageDialog(null, "Enter an integer between 1000 and 1000000");
+				else
+				{
+					userInput = Integer.parseInt(input.getText());
+					createArray();
+					runThreads();
+				}
 			}
 			catch (java.lang.NumberFormatException e)
 			{
 				JOptionPane.showMessageDialog(null, "Input must be an integer between 1000 and 1000000");
 			}
-				
-				
+
+
 		}
 	}
-	
+
 	/**
 	 * private helper method to create an array of randomly generated integers
 	 * and then copy it as needed
-	 */	
+	 */
 	private void createArray()
 	{
 		//creates array 
 		data = new Integer[userInput];
-		
+
 		Random generator = new Random();
-		
+
 		//loads array with random ints
 		for(int x = 0; x < data.length; x++)
 		{
 			data[x] = generator.nextInt(1000000);
-			
+
 		}
 		//creates "deep copies of array"
 		insertionData = data.clone();
 		quickData = data.clone();
-	}		
+	}
 
 	/**
 	 * private helper method to execute the SwingWorker threads
-	 */		
+	 */
 	private void runThreads()
 	{
 		//passes these copies into runnable classes
@@ -148,53 +159,53 @@ public class View implements ActionListener, PropertyChangeListener
 		//add change listeners for each of the demos
 		insertionSort.addPropertyChangeListener(this);
 		quickSort.addPropertyChangeListener(this);
-		
+
 		//starting threads
 		insertionSort.execute();
 		quickSort.execute();
 
 	}
-	
+
 	/**
 	 * propertyChange method is called when an object to which it is attached 
 	 * issues a property change event
 	 * @param PropertyChangeEvent evt the event to be handled
 	 */
-    public void propertyChange(PropertyChangeEvent evt) 
+	public void propertyChange(PropertyChangeEvent evt)
 	{
-		
+
 		if (evt.getSource().equals(insertionSort))
 		{
-		    if ("progress" == evt.getPropertyName()) 
-		    {
-			    int progress = (Integer) evt.getNewValue();
-			    if (progress == 100) 
+			if ("progress" == evt.getPropertyName())
+			{
+				int progress = (Integer) evt.getNewValue();
+				if (progress == 100)
 				{
-				    insertionBar.setValue(progress);
-				    finished.setText("Process Status: complete");
+					insertionBar.setValue(progress);
+					finished.setText("Process Status: complete");
 					insertionSortStatus.setText("IntertionSort Status: complete");
-			    }
-			    else 
-			    {
-				    finished.setText("Process Status: running");
+				}
+				else
+				{
+					finished.setText("Process Status: running");
 					insertionSortStatus.setText("IntertionSort Status: running");
-				    insertionBar.setValue(progress);
-			    }
-            }
+					insertionBar.setValue(progress);
+				}
+			}
 		}
 		else if (evt.getSource().equals(quickSort))
 		{
-	        if ("progress" == evt.getPropertyName()) 
+			if ("progress" == evt.getPropertyName())
 			{
 				int progress = (Integer) evt.getNewValue();
-				if (progress == 100) 
+				if (progress == 100)
 				{
 					quickBar.setValue(progress);
 					finished.setText("Process Status: complete");
 					quickSortStatus.setText("QuickSort Status: complete");
-				
+
 				}
-				else 
+				else
 				{
 					finished.setText("Process Status: running");
 					quickSortStatus.setText("QuickSort Status: running");
