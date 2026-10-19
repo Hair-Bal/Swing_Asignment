@@ -47,7 +47,7 @@ public class View implements ActionListener, PropertyChangeListener
 	private Integer[] quickData;
 	/**
 	 * initiating labels to display status of both sorts
-	 * @author Martin
+	 * @author Martin, Baird, Castro, Battle
 	 * @version 4.1
 	 */
 
